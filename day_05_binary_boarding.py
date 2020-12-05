@@ -16,10 +16,8 @@ def calculate_id(seat):
 
     seat_id = 0
     for i, c in enumerate(seat):
-        if c == "B":
-            seat_id += (2**(6-i)) * 8
-        elif c == "R":
-            seat_id += (2**(9-i))
+        if c == "B" or c == "R":
+            seat_id += 2**(9-i)
     return seat_id 
 
 
