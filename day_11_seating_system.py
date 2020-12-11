@@ -35,26 +35,19 @@ def part_2(data):
     w = len(seats[0])
     h = len(seats)
 
-    def neighbours(x, y, distance):
-        return [(x+dx, y+dy) if 0 <= (x+dx) < w and 0 <= (y+dy) < h else None
-                for dx, dy in itertools.product([-distance, 0, distance], repeat=2)
-                if (dx, dy) != (0, 0)]
-
-    def visible(x, y):
-        output = [None]*8
-        for distance in range(1, 100):
-            for i, coords in enumerate(neighbours(x, y, distance)):
-                if coords is not None:
-                    nx, ny = coords
-                    if output[i] == None and seats[ny][nx] != ".":
-                        output[i] = (nx, ny)
-        return [v for v in output if v is not None]
-
-    visible_from = dict()
-    for y, row in enumerate(seats):
-        for x, c in enumerate(row):
-            if c != ".":
-                visible_from[(x, y)] = visible(x, y)
+    def visible_from(x, y):
+        for dx in range(-1, 2):
+            for dy in range(-1, 2):
+                if (dx, dy) == (0, 0):
+                    continue
+                
+                distance = 1
+                while 0 <= x+(dx*distance) < w and 0 <= y+(dy*distance) < h:
+                    c = seats[y+dy*distance][x+dx*distance]
+                    if c != ".":
+                        yield c
+                        break
+                    distance += 1 
 
     while True:
         new_seats = [row[:] for row in seats]
@@ -63,7 +56,7 @@ def part_2(data):
                 if c == ".":
                     continue
 
-                count = sum(seats[ny][nx] == "#" for nx, ny in visible_from[(x, y)])
+                count = sum(c == "#" for c in visible_from(x, y))
                 if c == "L" and count == 0:
                     new_seats[y][x] = "#"
                 elif c == "#" and count >= 5:
