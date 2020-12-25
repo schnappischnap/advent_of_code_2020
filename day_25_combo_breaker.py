@@ -16,10 +16,6 @@ def part_1(data):
     return value
 
 
-def part_2(data):
-    return None
-
-
 if __name__ == '__main__':
     with open('day_25_input.txt', 'r') as f:
         inp = f.readlines()
